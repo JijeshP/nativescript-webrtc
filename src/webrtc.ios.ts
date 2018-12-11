@@ -433,21 +433,26 @@ export class WebRTC extends Common {
     }
 
     public speakerEnabled(enabled: boolean) {
+        let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo);
         const audioSession = ios.getter(
             RTCAudioSession,
             RTCAudioSession.sharedInstance
         );
         try {
             if (enabled) {
+                device.lockForConfiguration();
                 audioSession.overrideOutputAudioPortError(
                     AVAudioSessionPortOverride.Speaker
                 );
                 audioSession.setActiveError(true);
+                device.unlockForConfiguration();
             } else {
+                device.lockForConfiguration();
                 audioSession.overrideOutputAudioPortError(
                     AVAudioSessionPortOverride.None
                 );
                 audioSession.setActiveError(true);
+                device.unlockForConfiguration();
             }
         } catch (e) {
         }
